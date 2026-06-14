@@ -397,12 +397,18 @@ function renderProblems() {
       node.querySelector(".problem-text").insertAdjacentElement("afterend", figure);
     }
     const area = node.querySelector(".answer-area");
+    const prompt = document.createElement("div");
+    prompt.className = "answer-prompt";
+    prompt.innerHTML = `<strong>先写答案</strong><span>${currentSubject === "english" ? "可以先写关键词，再补完整句子。" : "先算一算，再写出结果。"}</span>`;
+    area.appendChild(prompt);
     const grid = document.createElement("div");
     grid.className = "answer-grid";
     problem.answers.forEach((answer, answerIndex) => {
       const label = document.createElement("label");
+      label.className = "answer-box";
       const saved = state.answers[`${index}-${answerIndex}`] || "";
-      label.innerHTML = `<span>${answerIndex + 1}. ${answer.type === "text" ? "说明理由" : `答案${answer.unit ? `（${answer.unit}）` : ""}`}</span><input class="input-field" data-problem="${index}" data-answer="${answerIndex}" value="${escapeHtml(saved)}" ${answer.type === "text" ? "" : 'inputmode="decimal"'} />`;
+      const placeholder = answer.type === "text" ? (currentSubject === "english" ? "写一个完整句子…" : "写清楚你的理由…") : `例如：${answer.unit || "12"}`;
+      label.innerHTML = `<span>${answerIndex + 1}. ${answer.type === "text" ? "我的回答" : `答案${answer.unit ? `（${answer.unit}）` : ""}`}</span><input class="input-field" data-problem="${index}" data-answer="${answerIndex}" value="${escapeHtml(saved)}" placeholder="${placeholder}" ${answer.type === "text" ? "" : 'inputmode="decimal"'} />`;
       grid.appendChild(label);
     });
     area.appendChild(grid);
