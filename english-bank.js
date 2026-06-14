@@ -473,22 +473,20 @@ function makeFltrpProblems(module) {
 }
 
 const moduleDetails = [
-  { key: "Module 1", title: "Past jobs", goal: "描述过去的职业和生活", rule: "was / worked / before", words: ["driver", "worked", "office", "before", "was"] },
-  { key: "Module 2", title: "Lunch time", goal: "谈论午餐和时间", rule: "What did...? / half past twelve", words: ["lunch", "half", "past", "twelve", "had"] },
-  { key: "Module 3", title: "Library rules", goal: "谈论物品和图书馆规则", rule: "Have you got...? / You can...", words: ["Harry", "DVDs", "computers", "use", "got"] },
-  { key: "Module 4", title: "Reading and seasons", goal: "谈论读过的书和喜欢的季节", rule: "Did you...? / My favourite...", words: ["read", "favourite", "season", "spring", "them"] },
-  { key: "Module 5", title: "Bags and colours", goal: "描述物品状态和颜色", rule: "Your... is... / Mine is...", words: ["bag", "broken", "mine", "pink", "your"] },
-  { key: "Module 6", title: "Travel", goal: "描述旅行计划和经历", rule: "We'll see... / It was...", words: ["stones", "amazing", "see", "lots", "was"] },
-  { key: "Module 7", title: "Daily timetable", goal: "描述每天的时间安排", rule: "goes to... at... / I'll be...", words: ["father", "work", "home", "eight", "seven"] },
-  { key: "Module 8", title: "Making things", goal: "表达请求和制作过程", rule: "Will you...? / I made...", words: ["help", "made", "kite", "will", "paper"] },
-  { key: "Module 9", title: "Shopping and gifts", goal: "描述旅行、欢笑和购买", rule: "laughed / bought", words: ["laughed", "bought", "chopsticks", "mum", "new"] },
-  { key: "Module 10", title: "Beach trip", goal: "描述包里物品和海边活动", rule: "What did you put...? / I played...", words: ["put", "bag", "played", "beach", "did"] },
+  { key: "Module 1", title: "Past jobs", goal: "描述过去的职业和以前做过的工作", rule: "was / worked / What did...?", words: ["driver", "worked", "office", "before", "drove"] },
+  { key: "Module 2", title: "Food and time", goal: "谈论吃过什么和吃饭时间", rule: "What did...? / had / usually at...", words: ["lunch", "sausages", "fish", "half", "twelve"] },
+  { key: "Module 3", title: "Library", goal: "询问有没有物品和图书馆规则", rule: "Have you got...? / Yes, I have. / You can...", words: ["DVDs", "books", "computers", "borrow", "use"] },
+  { key: "Module 4", title: "Reading and seasons", goal: "询问是否读过书并表达喜欢的季节", rule: "Did you...? / Yes, I did. / favourite / because", words: ["read", "season", "spring", "favourite", "because"] },
+  { key: "Module 5", title: "Bags and colours", goal: "描述物品状态、大小和归属", rule: "Your... is... / Mine is... / Which one is yours?", words: ["bag", "broken", "mine", "yours", "pink"] },
+  { key: "Module 6", title: "Travel", goal: "描述旅行计划和过去旅行体验", rule: "We'll see... / When will...? / It was...", words: ["stones", "amazing", "will", "lots", "went"] },
+  { key: "Module 7", title: "Daily timetable", goal: "描述每天时间安排和回家时间", rule: "goes to... at... / What time will...? / I'll...", words: ["father", "work", "home", "eight", "seven"] },
+  { key: "Module 8", title: "Making things", goal: "请求帮助并描述制作过程", rule: "Will you help me? / What about...? / I made...", words: ["help", "made", "kite", "drew", "cut"] },
+  { key: "Module 9", title: "Theatre and visit", goal: "描述过去经历和来访准备", rule: "laughed / told / bought / put / will", words: ["laughed", "jokes", "bought", "chopsticks", "borrowed"] },
+  { key: "Module 10", title: "Trip and beach", goal: "谈论旅行物品和过去旅行经历", rule: "What did you put...? / Where will...? / I played...", words: ["put", "bag", "played", "beach", "passport"] },
 ].map((detail) => ({ ...detail, ...fltrpModules.find((item) => item.key === detail.key) }))
   .map((detail) => ({
     ...detail,
-    goal: "教材目录已核验，正文知识点等待官方教材正文核验",
-    rule: "当前仅展示课文标题；真实词汇、句型、语法点需要逐页核验后再开放",
-    words: ["教材正文待核验", "请勿猜测", "官方来源", "逐页对照", "再出题"],
+    source: "用户目录照片 + haoduoyun.cc/fanyi/waiyan/5x/1.html-20.html",
   }));
 
 window.englishTopics = moduleDetails.map((item) => ({ unit: `${item.key}`, items: [`${item.key} Unit 1 — ${item.unit1}`, `${item.key} Unit 2 — ${item.unit2}`] }));
