@@ -444,3 +444,36 @@ window.makeEnglishFollowUpVariant = function(item, round) {
     round
   );
 };
+
+// 外研社版（三年级起点）五年级下册教材结构
+const fltrpModules = [
+  { key: "Module 1", title: "We lived in a small house", goal: "学习过去和现在生活变化的表达", rule: "过去式：lived / didn't have / there was", words: ["lived", "small", "house", "television", "many years ago"], sentence: "We lived in a small house many years ago." },
+  { key: "Module 2", title: "She learnt English", goal: "描述过去学习和工作的经历", rule: "过去式：learnt / taught / wrote / was", words: ["learnt", "taught", "language", "wrote", "dancer"], sentence: "She learnt English." },
+  { key: "Module 3", title: "She had eggs and sausages", goal: "谈论过去吃了什么", rule: "过去式：had / ate / drank", words: ["eggs", "sausages", "hamburgers", "sandwiches", "ate"], sentence: "She had eggs and sausages." },
+  { key: "Module 4", title: "Let's make a home library", goal: "学会借阅、寻找信息和制作图书角", rule: "Let's... / We can find information from...", words: ["library", "information", "books", "CDs", "cards"], sentence: "Let's make a home library." },
+  { key: "Module 5", title: "It's big and light", goal: "比较物品大小、重量和适合程度", rule: "It's big and light. / It's too big for you.", words: ["big", "light", "heavy", "small", "bag"], sentence: "It's big and light." },
+  { key: "Module 6", title: "I went there last year", goal: "描述去年去过的地方和旅行经历", rule: "过去式：went / visited / saw", words: ["went", "last year", "visited", "lake", "mountain"], sentence: "I went there last year." },
+  { key: "Module 7", title: "My father goes to work at eight", goal: "描述日常作息和将来安排", rule: "goes to... at... / I'll be home at...", words: ["goes", "work", "eight", "home", "o'clock"], sentence: "My father goes to work at eight o'clock." },
+  { key: "Module 8", title: "Will you help me?", goal: "表达请求、承诺和制作过程", rule: "Will you...? / I will... / I made...", words: ["help", "make", "kite", "paper", "string"], sentence: "Will you help me?" },
+  { key: "Module 9", title: "We laughed a lot", goal: "讲述旅行和收到礼物的经历", rule: "过去式：laughed / bought / wore", words: ["laughed", "bought", "T-shirts", "trip", "fun"], sentence: "We laughed a lot." },
+  { key: "Module 10", title: "Where are you going?", goal: "表达出行计划和当前所在地点", rule: "Where are you going to go? / I'm in... now.", words: ["going", "airport", "plane", "New York", "tomorrow"], sentence: "Where are you going to go?" },
+];
+
+function makeFltrpProblems(module) {
+  const [word1, word2, word3, word4, word5] = module.words;
+  return [
+    { type: "词汇填空", text: `Read and fill in the blanks.\n(${module.words.join(", ")})\n\n1. ${module.sentence.replace(word1, "_____")}\n2. Use the word _____ to complete a sentence about this module.`, answers: [{ type: "text", keywords: [word1, word2] }], insight: `先读题目，再从本模块核心词汇里找合适的词。`, variantSeed: `词汇-${module.key}` },
+    { type: "句型训练", text: `Complete the sentence and write your own sentence.\n\nModel: ${module.sentence}\n\n1. _____\n2. I can say: _____`, answers: [{ type: "text", keywords: module.sentence.split(" ").slice(0, 2) }], insight: `先模仿课本句型，再换成自己的内容。`, variantSeed: `句型-${module.key}` },
+    { type: "阅读理解", text: `Read and answer.\n\nAmy is learning ${word2}. She likes ${word3}. Yesterday she used a ${word4}. She was very happy.\n\nQuestion: What is Amy learning? What did she use?`, answers: [{ type: "text", keywords: [word2, word4] }], insight: `阅读题先找人物、活动和物品三个关键词。`, variantSeed: `阅读-${module.key}` },
+    { type: "情境表达", text: `Your friend asks you about this topic. Write 3 short sentences.\nUse at least these words: ${word1}, ${word2}, ${word3}.\n\n1. _____\n2. _____\n3. _____`, answers: [{ type: "text", keywords: [word1, word2, word3] }], insight: `每句话先写主语，再写动词和关键词。`, variantSeed: `表达-${module.key}` },
+    { type: "语法基础", text: `Choose the correct form.\n\n1. Yesterday I _____ (${word1} / ${word1}ed).\n2. I can use the word _____ in a sentence.\n3. Write one sentence with: ${word5}.`, answers: [{ type: "text", keywords: [word1, word5] }], insight: `注意过去发生的事情常用过去式，写句子时要有主语和动词。`, variantSeed: `语法-${module.key}` },
+  ];
+}
+
+window.englishTopics = fltrpModules.map((item) => ({ unit: `${item.key} ${item.title}`, items: [item.key] }));
+window.englishTopicMeta = Object.fromEntries(fltrpModules.map((item) => [item.key, { goal: item.goal, rule: item.rule, diagram: item.title }]));
+window.englishTopicMeta.default = { goal: "积累词汇，练习句型，提升英语综合能力", rule: "先读题，找关键词，再作答", diagram: "English Skills" };
+window.getEnglishProblems = function(topicName) {
+  const module = fltrpModules.find((item) => item.key === topicName);
+  return module ? makeFltrpProblems(module) : [];
+};

@@ -927,7 +927,7 @@ function updateBrand() {
   if (currentSubject === "english") {
     if (brandMark) { brandMark.textContent = "英"; brandMark.className = "brand-mark english-mark"; }
     if (subjectTitle) subjectTitle.textContent = "五下英语";
-    if (brandP) brandP.textContent = "北师大版";
+    if (brandP) brandP.textContent = "外研社版";
     document.body.classList.add("english-theme");
     var encText = document.querySelector(".game-encourage-text");
     if (encText) encText.textContent = "Practice makes perfect!";
@@ -992,7 +992,7 @@ async function askAiHint() {
   button.textContent = "AI 思考中...";
   $("aiState").textContent = "正在回答";
   try {
-    var context = `${currentSubject === "english" ? "北师大版五年级下册英语" : "北师大版五年级下册数学"}；当前知识点：${state.currentTopic}；请先给提示和追问，不要直接给完整答案。`;
+    var context = `${currentSubject === "english" ? "外研社版五年级下册英语" : "北师大版五年级下册数学"}；当前知识点：${state.currentTopic}；请先给提示和追问，不要直接给完整答案。`;
     var response = await fetch("https://grade5-math-coach-api.vercel.app/api/deepseek", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
