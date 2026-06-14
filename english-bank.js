@@ -483,7 +483,13 @@ const moduleDetails = [
   { key: "Module 8", title: "Making things", goal: "表达请求和制作过程", rule: "Will you...? / I made...", words: ["help", "made", "kite", "will", "paper"] },
   { key: "Module 9", title: "Shopping and gifts", goal: "描述旅行、欢笑和购买", rule: "laughed / bought", words: ["laughed", "bought", "chopsticks", "mum", "new"] },
   { key: "Module 10", title: "Beach trip", goal: "描述包里物品和海边活动", rule: "What did you put...? / I played...", words: ["put", "bag", "played", "beach", "did"] },
-].map((detail) => ({ ...detail, ...fltrpModules.find((item) => item.key === detail.key) }));
+].map((detail) => ({ ...detail, ...fltrpModules.find((item) => item.key === detail.key) }))
+  .map((detail) => ({
+    ...detail,
+    goal: "教材目录已核验，正文知识点等待官方教材正文核验",
+    rule: "当前仅展示课文标题；真实词汇、句型、语法点需要逐页核验后再开放",
+    words: ["教材正文待核验", "请勿猜测", "官方来源", "逐页对照", "再出题"],
+  }));
 
 window.englishTopics = moduleDetails.map((item) => ({ unit: `${item.key}`, items: [`${item.key} Unit 1 — ${item.unit1}`, `${item.key} Unit 2 — ${item.unit2}`] }));
 window.englishTopicMeta = Object.fromEntries(moduleDetails.flatMap((item) => [
