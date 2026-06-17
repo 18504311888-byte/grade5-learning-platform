@@ -59,7 +59,7 @@ let state;
 let game;
 
 function initState() {
-  const defaultTopic = currentSubject === "english" ? "My Day" : "相遇问题";
+  const defaultTopic = currentSubject === "english" ? "Module 1 Unit 1 — She was a driver before." : "相遇问题";
   state = load(getStorageKey(), {
     currentTopic: defaultTopic,
     openUnits: {},
@@ -78,6 +78,9 @@ function initState() {
     lastStudyDate: "",
     badges: [],
     topicAttempts: {},
+    dailyBonusDate: "",
+    dailyBonusClaimed: false,
+    milestones: [],
   });
 }
 initState();
@@ -745,9 +748,22 @@ function updateGame(score, mastered) {
     game.streak = game.lastStudyDate === yesterday ? game.streak + 1 : 1;
     game.lastStudyDate = today;
   }
-  game.stars += Math.max(1, Math.round(score / 20));
-  game.points += Math.max(4, Math.round(score / 10) + (mastered ? 4 : 0));
+  const starGain = Math.max(1, Math.round(score / 20));
+  const basePoints = Math.max(4, Math.round(score / 10) + (mastered ? 4 : 0));
+  game.stars += starGain;
+  game.points += basePoints;
+  if (game.dailyBonusDate !== today) {
+    game.dailyBonusDate = today;
+    game.dailyBonusClaimed = false;
+  }
+  if (!game.dailyBonusClaimed) {
+    game.points += 3;
+    game.dailyBonusClaimed = true;
+  }
   if (mastered && !game.badges.includes(state.currentTopic)) game.badges.push(state.currentTopic);
+  [20, 50, 100, 180, 300].forEach(function(points) {
+    if (game.points >= points && !game.milestones.includes(points)) game.milestones.push(points);
+  });
   game.topicAttempts[state.currentTopic] = (game.topicAttempts[state.currentTopic] || 0) + 1;
 }
 
@@ -758,12 +774,14 @@ function renderGame() {
   if (currentSubject === "english") {
     tasks = [
       state.topicStatus[state.currentTopic]?.attempts ? "今日已练" : "完成1次练习",
+      game.dailyBonusClaimed ? "每日+3分已获得" : "完成今日任务+3分",
       game.badges.includes(state.currentTopic) ? "已拿徽章" : "冲刺85分",
     ];
   } else {
     tasks = [
       state.topicStatus[state.currentTopic]?.attempts ? "今日已练" : "完成1次练习",
       state.photos.length ? "已上传作答" : "上传草稿照片",
+      game.dailyBonusClaimed ? "每日+3分已获得" : "完成今日任务+3分",
       game.badges.includes(state.currentTopic) ? "已拿徽章" : "冲刺85分",
     ];
   }
@@ -960,7 +978,7 @@ function init() {
   updateBrand();
 
   if (!allTopicNames().includes(state.currentTopic)) {
-    state.currentTopic = currentSubject === "english" ? "My Day" : "相遇问题";
+    state.currentTopic = currentSubject === "english" ? "Module 1 Unit 1 — She was a driver before." : "相遇问题";
   }
   $("startBtn").addEventListener("click", function() { renderLesson(); });
   $("resetBtn").addEventListener("click", resetTopic);
@@ -1009,46 +1027,6 @@ async function askAiHint() {
     button.disabled = false;
     button.textContent = "问 AI 提示";
   }
-}
-
-function askAiHint() {
-  var questionEl = $("aiQuestion");
-  var answerEl = $("aiAnswer");
-  var stateEl = $("aiState");
-  if (!questionEl || !answerEl) return;
-  var question = questionEl.value.trim();
-  if (!question) { answerEl.textContent = "请先输入你的问题。"; answerEl.className = "ai-answer"; return; }
-
-  var context = currentSubject === "english"
-    ? "五年级下册英语 - 当前学习：" + state.currentTopic
-    : "五年级下册数学 - 当前学习：" + state.currentTopic;
-
-  if (stateEl) stateEl.textContent = "思考中...";
-  answerEl.textContent = "正在请教 AI 学习伙伴...";
-  answerEl.className = "ai-answer";
-
-  fetch("/api/deepseek", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question: question, context: context, subject: currentSubject })
-  })
-  .then(function(resp) { return resp.json(); })
-  .then(function(data) {
-    if (data.answer) {
-      answerEl.textContent = data.answer;
-      answerEl.className = "ai-answer";
-      if (stateEl) stateEl.textContent = "已回答";
-    } else {
-      answerEl.textContent = "AI 暂时无法回答，请稍后再试。";
-      answerEl.className = "ai-answer";
-      if (stateEl) stateEl.textContent = "出错";
-    }
-  })
-  .catch(function() {
-    answerEl.textContent = "网络连接失败，请检查网络后重试。";
-    answerEl.className = "ai-answer";
-    if (stateEl) stateEl.textContent = "离线";
-  });
 }
 
 function reviewPhotoAnswers() {
